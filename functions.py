@@ -37,17 +37,21 @@ def add_message(message_data):
 
 
 def get_deleted_messages_data(message_ids):
-    messages = {
-        'owner': None,
-        'message': []
-    }
-    db = BotDataBase()
-    for id in message_ids:
-        messages['message'].append(db.get_deleted_messages_data(id))
-    messages['owner'] = db.get_messages_owner(messages['message'][0]['from_user'])
-    db.close_connection()
+    try:
+        messages = {
+            'owner': None,
+            'message': []
+        }
+        db = BotDataBase()
+        for id in message_ids:
+            messages['message'].append(db.get_deleted_messages_data(id))
 
-    return messages
+        messages['owner'] = db.get_messages_owner(messages['message'][0]['from_user'])
+        db.close_connection()
+
+        return messages
+    except TypeError as error:
+        print(f'No logged message was deleted id`s: {message_ids}')
 
 
 def delete_message_data(message):

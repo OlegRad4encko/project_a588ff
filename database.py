@@ -59,7 +59,7 @@ class BotDataBase:
     def get_deleted_messages_data(self, message_id):
         with self.connection.cursor() as cursor:
             try:
-                select_data_query = f'select `id` , `from_user`, `chat_id`, `message_id`, `message_text`, `include_media` from `messages` where `message_id` = %s'
+                select_data_query = f'select `id`, `from_user`, `chat_id`, `message_id`, `message_text`, `include_media` from `messages` where `message_id` = %s'
                 cursor.execute(select_data_query, (message_id))
                 return cursor.fetchall()[0]
             except Exception as error:

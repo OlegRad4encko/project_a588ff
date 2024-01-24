@@ -49,24 +49,27 @@ async def new_message_handler(event):
 async def handler(event):
     global default_chat_id
     deleted_messages = event.deleted_ids
-    messages_data = get_deleted_messages_data(deleted_messages)
+    try:
+        messages_data = get_deleted_messages_data(deleted_messages)
 
-    for message in messages_data['message']:
-        del_msg = f'Удалено сообщение от пользователя {messages_data["owner"]["first_name"]} {messages_data["owner"]["last_name"]} | @{messages_data["owner"]["username"]} \n '
-        del_msg += f'Содержание сообщения: \n'
+        for message in messages_data['message']:
+            del_msg = f'Удалено сообщение от пользователя {messages_data["owner"]["first_name"]} {messages_data["owner"]["last_name"]} | @{messages_data["owner"]["username"]} \n '
+            del_msg += f'Содержание сообщения: \n'
 
-        if message['message_text'] != '':
-            del_msg += f'<b>Текст:</b>\n'
-            del_msg += f'<i>{message["message_text"]}</i>'
+            if message['message_text'] != '':
+                del_msg += f'<b>Текст:</b>\n'
+                del_msg += f'<i>{message["message_text"]}</i>'
 
-        if message["include_media"] != None:
-            extract_to = f'files\{message["chat_id"]}_{message["message_id"]}'
-            media_path = unzip_media(message['include_media'], extract_to)
-            await client.send_file(default_chat_id, media_path, caption=del_msg, parse_mode='html')
-        else:
-            await client.send_message(default_chat_id, del_msg, parse_mode='html')
+            if message["include_media"] != None:
+                extract_to = f'files\{message["chat_id"]}_{message["message_id"]}'
+                media_path = unzip_media(message['include_media'], extract_to)
+                await client.send_file(default_chat_id, media_path, caption=del_msg, parse_mode='html')
+            else:
+                await client.send_message(default_chat_id, del_msg, parse_mode='html')
 
-        delete_message_data(message)
+            delete_message_data(message)
+    except TypeError as error:
+        client.send_message(default_chat_id, 'Незалогированное сообщение было удалено')
 
 
 
