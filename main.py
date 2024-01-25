@@ -69,7 +69,7 @@ async def handler(event):
 
             delete_message_data(message)
     except TypeError as error:
-        client.send_message(default_chat_id, 'Незалогированное сообщение было удалено')
+        await client.send_message(default_chat_id, 'Незалогированное сообщение было удалено')
 
 
 
