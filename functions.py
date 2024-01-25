@@ -10,6 +10,7 @@ def remove_directory(dir_path):
         shutil.rmtree(dir_path)
 
 
+
 def create_directory_if_not_exists(directory_path):
     if not os.path.exists(directory_path):
         os.makedirs(directory_path)
@@ -54,6 +55,7 @@ def get_deleted_messages_data(message_ids):
         print(f'No logged message was deleted id`s: {message_ids}')
 
 
+
 def delete_message_data(message):
     db = BotDataBase()
     db.delete_message_from_db(message['id'])
@@ -61,8 +63,6 @@ def delete_message_data(message):
 
     if message["include_media"] != None:
         remove_directory(f'files\{message["chat_id"]}_{message["message_id"]}')
-
-
 
 
 
