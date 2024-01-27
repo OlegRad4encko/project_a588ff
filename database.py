@@ -1,15 +1,18 @@
 import pymysql
 import sys
 import config
+from typing import NoReturn, Union, List, Dict
+
 
 class BotDataBase:
 
+    # конструктор
     def __init__(self,
-        host = config.DB_HOST,
-        port = config.DB_PORT,
-        user = config.DB_USER,
-        password = config.DB_PASSWORD,
-        database = config.DB_NAME):
+        host: str = config.DB_HOST,
+        port: int = config.DB_PORT,
+        user: str = config.DB_USER,
+        password: str = config.DB_PASSWORD,
+        database: str = config.DB_NAME) -> NoReturn:
         try:
             self.connection = pymysql.connect(
                 host=host,
@@ -26,7 +29,10 @@ class BotDataBase:
             sys.exit()
 
 
-    def insert_user(self, user_id, username, last_name, first_name):
+
+
+    # метод вставки в БД пользователей
+    def insert_user(self, user_id: int, username: bytes, last_name: bytes, first_name: bytes) -> NoReturn:
         with self.connection.cursor() as cursor:
             try:
                 insert_data_query = f'INSERT INTO `users` (`user_id`, `username`, `last_name`, `first_name`) VALUES (%s, %s, %s, %s)'
@@ -41,7 +47,10 @@ class BotDataBase:
                 pass
 
 
-    def insert_message(self, from_user, chat_id, message_id, message_text, include_media):
+
+
+    # метод вставки в БД сообщений
+    def insert_message(self, from_user: int, chat_id: int, message_id: int, message_text: bytes, include_media: Union[str, None]) -> NoReturn:
         with self.connection.cursor() as cursor:
             try:
                 insert_data_query = f'INSERT INTO `messages` (`from_user`, `chat_id`, `message_id`, `message_text`, `include_media`) VALUES (%s, %s, %s, %s, %s)'
@@ -56,7 +65,10 @@ class BotDataBase:
                 pass
 
 
-    def get_deleted_messages_data(self, message_id):
+
+
+    # метод извлечения из БД сообщений, которые были удалены
+    def get_deleted_messages_data(self, message_id: int) -> Union[Dict, NoReturn]:
         with self.connection.cursor() as cursor:
             try:
                 select_data_query = f'select `id`, `from_user`, `chat_id`, `message_id`, `message_text`, `include_media` from `messages` where `message_id` = %s'
@@ -70,7 +82,10 @@ class BotDataBase:
                 pass
 
 
-    def get_messages_owner(self, from_user):
+
+
+    # метод извлечения из БД отправителя сообщения
+    def get_messages_owner(self, from_user: int) -> Union[Dict, NoReturn]:
         with self.connection.cursor() as cursor:
             try:
                 select_data_query = f'select `first_name`, `last_name`, `username` from `users` where `user_id` = %s'
@@ -84,7 +99,10 @@ class BotDataBase:
                 pass
 
 
-    def delete_message_from_db(self, message_id):
+
+
+    # метод удаления из БД сообщений, которые были удалены
+    def delete_message_from_db(self, message_id: int) -> NoReturn:
         with self.connection.cursor() as cursor:
             try:
                 select_data_query = f'delete from `messages` where `id` = %s'
@@ -98,5 +116,8 @@ class BotDataBase:
                 pass
 
 
-    def close_connection(self):
+
+
+    # метод закрытия соединения с БД
+    def close_connection(self) -> NoReturn:
         self.connection.close()
