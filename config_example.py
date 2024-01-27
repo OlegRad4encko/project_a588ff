@@ -1,8 +1,7 @@
-#bots
-API_TOKEN = ""
-API_ID = ""
-API_HASH = ""
-PHONE_NUMBER = ""
+#bot_user
+API_ID = "" #
+API_HASH = "" #
+
 
 #database
 DB_HOST = ''
