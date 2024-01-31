@@ -2,7 +2,7 @@ import pymysql
 import sys
 import config
 from typing import NoReturn, Union, List, Dict
-
+from loging_module import log_event
 
 class BotDataBase:
 
@@ -24,8 +24,7 @@ class BotDataBase:
             )
         except Exception as db_ex:
             print('No connection to database. Check your settings')
-            print(db_ex)
-            # logging here
+            log_event('critical', db_ex)
             sys.exit()
 
 
@@ -40,8 +39,7 @@ class BotDataBase:
                 self.connection.commit()
             except Exception as error:
                 if 'Duplicate entry' not in str(error):
-                    print("Error:", error, sep=' ')
-                    # logging here
+                    log_event('error', error)
 
             finally:
                 pass
@@ -58,8 +56,7 @@ class BotDataBase:
                 self.connection.commit()
             except Exception as error:
                 if 'Duplicate entry' not in str(error):
-                    print("Error:", error, sep=' ')
-                    # logging here
+                    log_event('error', error)
 
             finally:
                 pass
@@ -75,8 +72,7 @@ class BotDataBase:
                 cursor.execute(select_data_query, (message_id))
                 return cursor.fetchall()[0]
             except Exception as error:
-                # logging here
-                print(error)
+                log_event('error', error)
 
             finally:
                 pass
@@ -92,8 +88,7 @@ class BotDataBase:
                 cursor.execute(select_data_query, (from_user))
                 return cursor.fetchall()[0]
             except Exception as error:
-                # logging here
-                print(error)
+                log_event('error', error)
 
             finally:
                 pass
@@ -109,8 +104,7 @@ class BotDataBase:
                 cursor.execute(select_data_query, (message_id))
                 self.connection.commit()
             except Exception as error:
-                # logging here
-                print(error)
+                log_event('error', error)
 
             finally:
                 pass

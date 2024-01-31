@@ -6,6 +6,7 @@ import shutil
 import zipfile
 import json
 from typing import NoReturn, Union, List, Dict
+from loging_module import log_event
 
 # импорт библиотек для шифрования
 from Crypto.Cipher import AES
@@ -65,6 +66,7 @@ def encrypt_data(plain_text: str) -> Union[bytes, NoReturn]:
         return cipher_text_b64
     except ValueError as error:
         print("Проблема с ключами шифрования: ", error)
+        log_event('critical', error)
         sys.exit()
 
 
@@ -87,6 +89,8 @@ def decrypt_data(cipher_text_b64: bytes) -> str:
         return decrypted_text.decode()
     except ValueError as error:
         print("Проблема с ключами шифрования: ", error)
+        log_event('critical', error)
+        log_event('critical', f'Проблема с ключами шифрования: {error}')
         sys.exit()
 
 
@@ -163,7 +167,8 @@ def get_deleted_messages_data(message_ids: List) -> Union[Dict, NoReturn]:
 
         return messages
     except TypeError as error:
-        print(f'No logged message was deleted id`s: {message_ids}')
+        log_event('warning', error)
+        log_event('warning', f'No logged message was deleted id`s: {message_ids}')
 
 
 
